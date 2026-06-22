@@ -437,7 +437,7 @@ async function doScan() {
   document.getElementById("scanBtn").textContent = "Scanning...";
 
   try {
-    const res = await fetch("/api/scan", {
+    const res = await http://labelpe.onrender.com/api/scan", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ food, mode: currentMode }),
