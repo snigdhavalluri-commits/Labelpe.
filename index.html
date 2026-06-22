@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LabelPe • Read the Label. Eat Right.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;min-height:100vh;transition:background 0.3s}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+
+/* HOME */
+.home{background:#0F0F1A;min-height:100vh;display:flex;flex-direction:column;color:#fff}
+.home-header{padding:2.5rem 1.5rem 1rem;text-align:center}
+.logo{font-size:2rem;font-weight:900;letter-spacing:-1px}
+.logo-pe{color:#E8A020}
+.logo-dot{color:#C0392B;font-size:1rem}
+.logo-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);letter-spacing:0.1em;margin-top:2px}
+.home-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
+.home-title{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:900;text-align:center;line-height:1.2;margin-bottom:0.5rem}
+.home-sub{color:rgba(255,255,255,0.4);font-size:0.88rem;text-align:center;max-width:340px;line-height:1.7;margin-bottom:1.75rem}
+.mode-btn{width:100%;max-width:400px;padding:1.4rem 1.5rem;border-radius:20px;border:none;display:flex;align-items:center;gap:1.1rem;text-align:left;margin-bottom:0.85rem;transition:transform 0.2s,box-shadow 0.2s}
+.mode-btn:hover{transform:translateY(-2px)}
+.mode-btn-icon{font-size:2.2rem;flex-shrink:0}
+.mode-btn-title{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:0.2rem}
+.mode-btn-desc{font-size:0.78rem;line-height:1.5;color:rgba(255,255,255,0.55)}
+.mode-btn-arrow{margin-left:auto;font-size:1.3rem;color:rgba(255,255,255,0.3);flex-shrink:0}
+.mode-general{background:linear-gradient(135deg,#1A1A2E,#2D2D44);box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+.mode-kids{background:linear-gradient(135deg,#2D1B69,#4C1D95);border:2px solid #7C3AED;box-shadow:0 4px 24px rgba(124,58,237,0.3)}
+.mode-kidney{background:linear-gradient(135deg,#0C2340,#0C4A6E);border:2px solid #0891B2;box-shadow:0 4px 24px rgba(8,145,178,0.3)}
+.home-footer{padding:1.25rem;text-align:center;font-size:0.7rem;color:rgba(255,255,255,0.2)}
+
+/* APP */
+.app{min-height:100vh}
+.app-general{background:#FFFDF7;color:#1A1A1A}
+.app-kids{background:#FAF5FF;color:#1A1A1A}
+.app-kidney{background:#F0F9FF;color:#1A1A1A}
+
+nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;flex-wrap:wrap}
+.nav-general{background:rgba(255,253,247,0.95)}
+.nav-kids{background:rgba(250,245,255,0.95)}
+.nav-kidney{background:rgba(240,249,255,0.95)}
+.nav-logo{background:none;border:none;font-size:1.2rem;font-weight:900;padding:0;letter-spacing:-0.5px}
+.tab-btn{padding:0.28rem 0.75rem;border-radius:100px;border:none;font-size:0.75rem;font-weight:600;background:transparent;color:#6B6355}
+.tab-btn.active{background:#1A1A1A;color:#fff}
+
+.hero{padding:1.5rem 1.25rem 1.25rem}
+.hero-general{background:#1A1A1A}
+.hero-kids{background:#4C1D95}
+.hero-kidney{background:#0C4A6E}
+.hero-inner{max-width:760px;margin:0 auto}
+.hero-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem}
+.hero-emoji{font-size:2rem}
+.hero-title{font-size:1.3rem;font-weight:900;color:#fff}
+.hero-desc{font-size:0.78rem;color:rgba(255,255,255,0.45);margin-top:2px}
+.hero-pills{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem}
+.hero-pill{display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:rgba(255,255,255,0.65);background:rgba(255,255,255,0.08);padding:0.3rem 0.7rem;border-radius:100px}
+
+.content{max-width:760px;margin:0 auto;padding:1.25rem 1rem 4rem}
+
+/* SCANNER */
+.search-row{display:flex;gap:0.6rem;margin-bottom:1.25rem}
+.search-input{flex:1;padding:0.9rem 1.1rem;border-radius:14px;border:2px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.95);font-size:0.9rem;color:#1A1A1A;outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:var(--mode-color)}
+.scan-btn{padding:0.9rem 1.3rem;border-radius:14px;border:none;font-weight:700;font-size:0.9rem;white-space:nowrap;transition:opacity 0.2s}
+.scan-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+.cat-label{font-size:0.62rem;font-family:monospace;letter-spacing:0.1em;color:#6B6355;margin-bottom:0.4rem;text-transform:uppercase}
+.cat-row{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.9rem}
+.food-pill{padding:0.28rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.09);color:#6B6355;font-size:0.76rem;font-weight:500;transition:all 0.15s}
+.food-pill:hover{background:rgba(255,255,255,1);color:#1A1A1A}
+
+.error-box{padding:1rem 1.2rem;border-radius:12px;background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.2);color:#C0392B;font-size:0.85rem;margin-bottom:1rem}
+.loading{text-align:center;padding:3rem 1rem;color:#6B6355}
+.spinner{width:40px;height:40px;border:3px solid rgba(0,0,0,0.08);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:3rem 1rem;border:2px dashed rgba(0,0,0,0.08);border-radius:20px;color:#6B6355;margin-top:0.5rem}
+.empty-icon{font-size:3rem;margin-bottom:0.75rem}
+.empty-title{font-size:0.95rem;font-weight:700;margin-bottom:0.5rem}
+.empty-desc{font-size:0.82rem;opacity:0.6;line-height:1.7;max-width:320px;margin:0 auto}
+.empty-count{margin-top:1.25rem;font-size:0.78rem;font-weight:600}
+
+/* RESULT */
+.result{display:flex;flex-direction:column;gap:0.9rem;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.food-header{padding:0.9rem 1rem;border-radius:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.food-header-general{background:#1A1A1A}
+.food-header-kids{background:#4C1D95}
+.food-header-kidney{background:#0C4A6E}
+.food-name{font-size:1rem;font-weight:700;color:#fff}
+.origin-badge{font-size:0.72rem;font-family:monospace;padding:0.2rem 0.65rem;border-radius:100px}
+
+.card{border-radius:16px;padding:1.2rem;border:1px solid rgba(0,0,0,0.07)}
+.card-general{background:rgba(255,255,255,0.8)}
+.card-kids{background:rgba(255,255,255,0.8);border-color:#DDD6FE}
+.card-kidney{background:rgba(255,255,255,0.8);border-color:#BAE6FD}
+.card-lbl{font-size:0.6rem;font-family:monospace;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.65rem;display:block;font-weight:700}
+
+.chips{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem}
+.chip{padding:0.32rem 0.75rem;border-radius:100px}
+.chip-name{font-size:0.78rem;font-weight:600}
+.chip-what{font-size:0.6rem;opacity:0.7;margin-top:1px}
+.chip-safe{background:rgba(76,175,114,0.13);color:#2E7D50;border:1px solid rgba(76,175,114,0.28)}
+.chip-warn{background:rgba(232,160,32,0.13);color:#9A6200;border:1px solid rgba(232,160,32,0.28)}
+.chip-bad{background:rgba(192,57,43,0.11);color:#9B2315;border:1px solid rgba(192,57,43,0.25)}
+.legend{display:flex;gap:0.45rem;flex-wrap:wrap}
+.legend-item{padding:0.15rem 0.55rem;border-radius:100px;font-size:0.62rem}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+@media(max-width:480px){.two-col{grid-template-columns:1fr}}
+
+.score-big{font-size:4rem;font-weight:900;line-height:1}
+.score-reason{font-size:0.78rem;color:#6B6355;margin-top:0.45rem;line-height:1.6}
+.bar-row{margin-bottom:0.55rem}
+.bar-header{display:flex;justify-content:space-between;font-size:0.75rem;color:#6B6355;margin-bottom:3px}
+.bar-bg{height:5px;background:rgba(0,0,0,0.07);border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width 0.8s ease}
+
+.verdict-bar{border-radius:14px;padding:1rem 1.3rem;font-size:0.95rem;font-weight:700;line-height:1.6}
+
+/* VERDICT BANNER */
+.vbanner{border-radius:16px;padding:1.1rem 1.3rem;display:flex;align-items:center;gap:1rem}
+.vbanner-icon{font-size:2.5rem;flex-shrink:0}
+.vbanner-word{font-size:1.4rem;font-weight:900}
+.vbanner-reason{font-size:0.85rem;margin-top:2px;line-height:1.5}
+.vbanner-safe{background:#D1FAE5;color:#065F46}
+.vbanner-caution,.vbanner-limit{background:#FEF3C7;color:#92400E}
+.vbanner-avoid{background:#FEE2E2;color:#991B1B}
+
+/* KIDS EXTRAS */
+.fun-fact{border-radius:16px;padding:1.1rem 1.2rem;display:flex;gap:0.75rem}
+.fun-fact-kids{background:linear-gradient(135deg,#F3E8FF,#EDE9FE);border:2px solid #DDD6FE}
+.fun-fact-label{font-size:0.62rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;margin-bottom:0.3rem;color:#7C3AED}
+.fun-fact-text{font-size:0.87rem;color:#4C1D95;line-height:1.65;font-weight:500}
+.sugar-val{font-size:1.6rem;font-weight:900}
+.colour-val{font-size:1.6rem;font-weight:900}
+.mini-desc{font-size:0.77rem;color:#6B6355;margin-top:4px;line-height:1.4}
+.allergen-box{border-radius:12px;padding:1rem 1.2rem}
+.allergen-kids{background:#FFFBEB;border:2px solid #FCD34D}
+.allergen-tag{padding:0.28rem 0.75rem;border-radius:100px;font-size:0.82rem;font-weight:700;border:1px solid #F59E0B;background:#FEF3C7;color:#92400E}
+
+/* KIDNEY EXTRAS */
+.info-card{border-radius:16px;padding:1.1rem 1.2rem;display:flex;gap:0.75rem}
+.dialysis-card{background:linear-gradient(135deg,#E0F2FE,#CFFAFE);border:2px solid #7DD3FC}
+.dialysis-label{font-size:0.62rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#0369A1;margin-bottom:0.3rem}
+.dialysis-text{font-size:0.87rem;color:#0C4A6E;line-height:1.65;font-weight:500}
+.portion-card{background:linear-gradient(135deg,#D1FAE5,#CCFBF1);border:2px solid #6EE7B7}
+.portion-label{font-size:0.62rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#065F46;margin-bottom:0.3rem}
+.portion-val{font-size:1rem;font-weight:800;color:#065F46}
+.renal-box{border-radius:16px;padding:1.2rem;background:#F0F9FF;border:1.5px solid #BAE6FD}
+.renal-row{display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0.85rem;border-radius:12px;margin-bottom:0.45rem;font-weight:600}
+.renal-label{font-size:0.85rem;color:#1A1A1A}
+.renal-val{font-size:0.82rem;font-weight:800}
+.renal-low{background:rgba(76,175,114,0.15)}.renal-low .renal-val{color:#2E7D50}
+.renal-medium{background:rgba(232,160,32,0.15)}.renal-medium .renal-val{color:#9A6200}
+.renal-high{background:rgba(192,57,43,0.15)}.renal-high .renal-val{color:#9B2315}
+.renal-very-high{background:rgba(139,0,0,0.18)}.renal-very-high .renal-val{color:#7B0000}
+.disclaimer{background:#FFFBEB;border:1px solid #FCD34D;border-radius:12px;padding:0.9rem 1rem;font-size:0.77rem;color:#92400E;line-height:1.7}
+
+/* BUSINESS SECTIONS */
+.section-title{font-weight:900;font-size:1.75rem;margin-bottom:4px}
+.section-sub{color:#6B6355;font-size:0.88rem;margin-bottom:1.5rem}
+.phase{border-radius:16px;padding:1.2rem;border:1px solid rgba(0,0,0,0.07);margin-bottom:0.85rem}
+.phase-no{font-size:0.6rem;font-family:monospace;color:#bbb;letter-spacing:0.1em;margin-bottom:2px}
+.phase-title{font-size:1.05rem;font-weight:800;margin-bottom:2px}
+.phase-time{font-size:0.7rem;font-family:monospace;margin-bottom:0.75rem}
+.phase-items{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.75rem}
+.phase-item{background:rgba(0,0,0,0.04);border-radius:100px;padding:0.22rem 0.65rem;font-size:0.76rem;color:#6B6355}
+.phase-goal{border-radius:10px;padding:0.45rem 0.85rem;font-size:0.78rem;font-weight:700}
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.rev-card{border-radius:16px;padding:1.3rem;border:1px solid rgba(0,0,0,0.07)}
+.rev-tag{display:inline-block;border-radius:100px;padding:0.18rem 0.6rem;font-size:0.65rem;font-family:monospace;margin-bottom:0.65rem}
+.rev-title{font-size:0.97rem;font-weight:800;margin-bottom:0.4rem}
+.rev-desc{font-size:0.81rem;color:#6B6355;line-height:1.65}
+.ipo-card{border-radius:16px;padding:1.2rem;border:1px solid rgba(0,0,0,0.07);display:flex;gap:1rem;margin-bottom:0.85rem}
+.ipo-num{font-size:2.8rem;font-weight:900;color:rgba(0,0,0,0.05);line-height:1;flex-shrink:0}
+.ipo-title{font-size:0.97rem;font-weight:800;margin-bottom:0.3rem}
+.ipo-desc{font-size:0.8rem;color:#6B6355;line-height:1.65;margin-bottom:0.6rem}
+.ipo-tag{background:rgba(232,160,32,0.12);color:#E8A020;border-radius:100px;padding:0.18rem 0.6rem;font-size:0.65rem;font-family:monospace}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;margin-top:1rem}
+th{background:#1A1A1A;color:#fff;padding:0.75rem 0.9rem;text-align:left;font-size:0.7rem;font-family:monospace}
+td{padding:0.65rem 0.9rem;border-bottom:1px solid rgba(0,0,0,0.05)}
+.pos{color:#2A7A45;font-weight:700}.neg{color:#C0392B;font-weight:600}
+
+footer{background:#1A1A1A;color:rgba(255,255,255,0.3);text-align:center;padding:1.75rem;font-size:0.75rem;line-height:1.9}
+footer strong{color:#FFC94D}
+</style>
+</head>
+<body>
+
+<!-- HOME SCREEN -->
+<div id="home" class="home">
+  <div class="home-header">
+    <div class="logo">Label<span class="logo-pe">Pe</span><span class="logo-dot">•</span></div>
+    <div class="logo-sub">READ THE LABEL. EAT RIGHT.</div>
+  </div>
+  <div class="home-body">
+    <div class="home-title">Who are you<br/>eating for?</div>
+    <p class="home-sub">Choose your mode. Get personalised food intelligence for you and your family — any food in the world.</p>
+    <button class="mode-btn mode-general" onclick="openMode('general')">
+      <span class="mode-btn-icon">🏷️</span>
+      <div><div class="mode-btn-title">General Mode</div><div class="mode-btn-desc">Ingredients · Health Score · Allergens · Ayurvedic insight for everyone</div></div>
+      <span class="mode-btn-arrow">›</span>
+    </button>
+    <button class="mode-btn mode-kids" onclick="openMode('kids')">
+      <span class="mode-btn-icon">👶</span>
+      <div><div class="mode-btn-title">Kids Mode</div><div class="mode-btn-desc">Safe for children aged 1–12 · Sugar · Artificial colours · Allergens · Fun facts</div></div>
+      <span class="mode-btn-arrow">›</span>
+    </button>
+    <button class="mode-btn mode-kidney" onclick="openMode('kidney')">
+      <span class="mode-btn-icon">🫘</span>
+      <div><div class="mode-btn-title">Kidney / Dialysis Mode</div><div class="mode-btn-desc">Potassium · Phosphorus · Sodium · Safe portions for kidney patients & dialysis</div></div>
+      <span class="mode-btn-arrow">›</span>
+    </button>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:0.5rem">Any food in the world · AI-powered · No internet required after setup</div>
+  </div>
+  <div class="home-footer">Not a substitute for professional medical advice · © 2025 LabelPe Pvt Ltd</div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app" style="display:none">
+  <nav id="nav">
+    <button class="nav-logo" id="navLogo" onclick="goHome()">← LabelPe<span style="color:#C0392B;font-size:0.75rem">•</span></button>
+    <div style="display:flex;gap:0.3rem;margin-left:auto;flex-wrap:wrap">
+      <button class="tab-btn active" onclick="showTab('scanner',this)">🔍 Scan</button>
+      <button class="tab-btn" onclick="showTab('roadmap',this)">📍 Roadmap</button>
+      <button class="tab-btn" onclick="showTab('revenue',this)">💰 Revenue</button>
+      <button class="tab-btn" onclick="showTab('ipo',this)">🔔 IPO</button>
+    </div>
+  </nav>
+
+  <div class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-row">
+        <span class="hero-emoji" id="heroEmoji"></span>
+        <div>
+          <div class="hero-title" id="heroTitle"></div>
+          <div class="hero-desc" id="heroDesc"></div>
+        </div>
+      </div>
+      <div class="hero-pills" id="heroPills"></div>
+    </div>
+  </div>
+
+  <!-- SCANNER TAB -->
+  <div class="content" id="tabScanner">
+    <div class="search-row">
+      <input id="foodInput" class="search-input" placeholder="Type any food in the world..." onkeydown="if(event.key==='Enter')doScan()"/>
+      <button id="scanBtn" class="scan-btn" onclick="doScan()">Scan →</button>
+    </div>
+    <div id="categories">
+      <div class="cat-label">🇮🇳 Indian Foods</div>
+      <div class="cat-row" id="cat0"></div>
+      <div class="cat-label">🌍 Global Packaged</div>
+      <div class="cat-row" id="cat1"></div>
+      <div class="cat-label">🍔 Fast Food</div>
+      <div class="cat-row" id="cat2"></div>
+      <div class="cat-label">🥗 Healthy & Whole</div>
+      <div class="cat-row" id="cat3"></div>
+      <div class="cat-label">🌏 World Cuisines</div>
+      <div class="cat-row" id="cat4"></div>
+    </div>
+    <div id="errorBox" style="display:none" class="error-box"></div>
+    <div id="loadingBox" style="display:none" class="loading">
+      <div class="spinner" id="spinner"></div>
+      <div id="loadingText">Analysing ingredients with AI...</div>
+    </div>
+    <div id="resultBox"></div>
+    <div id="emptyBox" class="empty">
+      <div class="empty-icon" id="emptyIcon">🏷️</div>
+      <div class="empty-title" id="emptyTitle">Type any food in the world</div>
+      <div class="empty-desc" id="emptyDesc">Tap any food above or type to search</div>
+      <div class="empty-count" id="emptyCount" style="color:#E8A020">Any food in the world · AI analyses every ingredient</div>
+    </div>
+  </div>
+
+  <!-- ROADMAP TAB -->
+  <div class="content" id="tabRoadmap" style="display:none">
+    <div class="section-title">From Idea to IPO 🚀</div>
+    <div class="section-sub">7-year phased roadmap for the Indian market</div>
+    <div id="phases"></div>
+    <h3 style="font-weight:800;font-size:1.1rem;margin-bottom:0.75rem;margin-top:1.5rem">7-Year Financial Projections</h3>
+    <div style="overflow-x:auto"><table id="finTable"></table></div>
+  </div>
+
+  <!-- REVENUE TAB -->
+  <div class="content" id="tabRevenue" style="display:none">
+    <div class="section-title">6 Revenue Streams 💰</div>
+    <div class="section-sub">Diversified from day one — no single source dependency</div>
+    <div class="rev-grid" id="revGrid"></div>
+  </div>
+
+  <!-- IPO TAB -->
+  <div class="content" id="tabIpo" style="display:none">
+    <div class="section-title">IPO Roadmap 🔔</div>
+    <div class="section-sub">Path to NSE/BSE listing through SEBI framework</div>
+    <div id="ipoSteps"></div>
+  </div>
+
+  <footer>
+    <strong>LabelPe•</strong> — Read the Label. Eat Right.<br/>
+    General · 👶 Kids · 🫘 Kidney & Dialysis · Any food in the world · AI-powered<br/>
+    <span style="font-size:0.68rem;opacity:0.6">Not a substitute for professional medical advice. Always consult your doctor or dietitian.</span>
+  </footer>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+let currentMode = "general";
+
+const MODES = {
+  general:{color:"#E8A020",bg:"#FFFDF7",hero:"general",emoji:"🏷️",title:"General Mode",desc:"Ingredients, health scores & Ayurvedic insight",pills:[]},
+  kids:   {color:"#7C3AED",bg:"#FAF5FF",hero:"kids",   emoji:"👶",title:"Kids Mode (Ages 1–12)",desc:"Safe food guide for children aged 1 to 12",
+    pills:[["✅","SAFE — eat freely"],["⚠️","CAUTION — occasionally"],["🚫","AVOID — not for kids"]]},
+  kidney: {color:"#0891B2",bg:"#F0F9FF",hero:"kidney", emoji:"🫘",title:"Kidney / Dialysis Mode",desc:"Food safety for kidney patients and dialysis",
+    pills:[["✅","SAFE — kidney-friendly"],["⚠️","LIMIT — small portions"],["🚫","AVOID — dangerous"]]},
+};
+
+const CATS = [
+  ["Maggi Masala Noodles","Parle-G Biscuit","Amul Butter","Kurkure","Haldiram Bhujia","Idli Sambar","Butter Chicken","Masala Dosa","Dal Makhani","Chicken Biryani","Vada Pav","Samosa","Poha","Khichdi","Rajma Chawal","Upma","Paneer Tikka","Pav Bhaji","Aloo Paratha","Chole Bhature"],
+  ["Coca-Cola","Nutella","Oreo Cookies","Kellogg's Corn Flakes","Red Bull","Kit Kat","Lay's Chips","Snickers Bar","Maggi Ketchup","Pringles","Heinz Tomato Ketchup","Tropicana Orange Juice"],
+  ["McDonald's Big Mac","KFC Fried Chicken","Domino's Pizza","Subway Veggie Sub","Burger King Whopper","Starbucks Frappuccino","Pizza Hut Margherita"],
+  ["Avocado","Greek Yogurt","Quinoa","Almonds","Spinach","Brown Rice","Blueberries","Oats","Banana","Apple","Carrot","Sweet Potato","Salmon","Eggs","Broccoli","Lentils"],
+  ["Sushi Roll","Pad Thai","Pasta Carbonara","Falafel Wrap","Hummus","Croissant","Kimchi","Shakshuka","Tom Yum Soup","Tacos","Jerk Chicken","Baklava"],
+];
+
+const SCORE_COLOR = {A:"#2E7D50",B:"#9A6200",C:"#C05700",D:"#9B2315"};
+
+// ── NAVIGATION ──────────────────────────────────────────────────
+function openMode(mode) {
+  currentMode = mode;
+  const M = MODES[mode];
+  document.getElementById("home").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  // Style app
+  const app = document.getElementById("app");
+  app.className = `app app-${mode}`;
+  document.getElementById("nav").className = `nav-${mode}`;
+  document.getElementById("hero").className = `hero hero-${mode}`;
+
+  // Nav logo color
+  document.getElementById("navLogo").style.color = "#1A1A1A";
+  const pe = document.getElementById("navLogo");
+  pe.innerHTML = `← Label<span style="color:${M.color}">Pe</span><span style="color:#C0392B;font-size:0.75rem">•</span>`;
+
+  // Hero
+  document.getElementById("heroEmoji").textContent = M.emoji;
+  document.getElementById("heroTitle").textContent = M.title;
+  document.getElementById("heroDesc").textContent = M.desc;
+  const pills = document.getElementById("heroPills");
+  pills.innerHTML = M.pills.map(([icon,txt]) =>
+    `<div class="hero-pill"><span>${icon}</span>${txt}</div>`).join("");
+
+  // Search
+  const si = document.getElementById("foodInput");
+  si.placeholder = mode==="kids" ? "Type any food to check if it's safe for kids..." :
+                   mode==="kidney" ? "Type any food to check kidney and dialysis safety..." :
+                   "Type any food in the world — Indian, Japanese, Italian, American...";
+  si.style.borderColor = "rgba(0,0,0,0.1)";
+  si.addEventListener("focus", ()=>si.style.borderColor=M.color);
+  si.addEventListener("blur",  ()=>si.style.borderColor="rgba(0,0,0,0.1)");
+
+  // Scan button
+  const btn = document.getElementById("scanBtn");
+  btn.style.background = M.color;
+  btn.style.color = mode==="general" ? "#1A1A1A" : "#fff";
+
+  // Spinner
+  document.getElementById("spinner").style.borderTopColor = M.color;
+
+  // Loading text
+  document.getElementById("loadingText").textContent =
+    mode==="kids"   ? "Checking safety for kids..." :
+    mode==="kidney" ? "Checking potassium, phosphorus and sodium..." :
+    "Analysing ingredients with AI...";
+
+  // Empty state
+  document.getElementById("emptyIcon").textContent = M.emoji;
+  document.getElementById("emptyTitle").textContent =
+    mode==="kids"   ? "Tap any food to check if it's safe for your child" :
+    mode==="kidney" ? "Tap any food to check kidney and dialysis safety" :
+    "Type any food in the world";
+  document.getElementById("emptyDesc").textContent =
+    mode==="kids"   ? "Sugar · Artificial colours · Allergens · Health score · Fun facts" :
+    mode==="kidney" ? "Potassium · Phosphorus · Sodium · Safe portions · Dialysis notes" :
+    "Ingredients · Health Score · Allergens · Ayurvedic Insight";
+  document.getElementById("emptyCount").style.color = M.color;
+  document.getElementById("emptyCount").textContent = "Any food in the world · AI analyses every ingredient in real time";
+
+  // Categories
+  CATS.forEach((foods, i) => {
+    document.getElementById(`cat${i}`).innerHTML = foods.map(f =>
+      `<button class="food-pill" onclick="quickScan('${f.replace(/'/g,"\\'")}')"> ${f}</button>`
+    ).join("");
+  });
+
+  // Business data
+  buildBusiness(mode);
+
+  // Reset
+  document.getElementById("resultBox").innerHTML = "";
+  document.getElementById("errorBox").style.display = "none";
+  document.getElementById("loadingBox").style.display = "none";
+  document.getElementById("emptyBox").style.display = "block";
+}
+
+function goHome() {
+  document.getElementById("app").style.display = "none";
+  document.getElementById("home").style.display = "flex";
+  document.getElementById("home").style.flexDirection = "column";
+}
+
+function showTab(tab, btn) {
+  ["scanner","roadmap","revenue","ipo"].forEach(t => {
+    document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`).style.display = t===tab?"block":"none";
+  });
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+// ── SCAN ────────────────────────────────────────────────────────
+function quickScan(food) {
+  document.getElementById("foodInput").value = food;
+  doScan();
+}
+
+async function doScan() {
+  const food = document.getElementById("foodInput").value.trim();
+  if (!food) return;
+  document.getElementById("errorBox").style.display = "none";
+  document.getElementById("resultBox").innerHTML = "";
+  document.getElementById("emptyBox").style.display = "none";
+  document.getElementById("loadingBox").style.display = "block";
+  document.getElementById("scanBtn").disabled = true;
+  document.getElementById("scanBtn").textContent = "Scanning...";
+
+  try {
+    const res = await fetch("/api/scan", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ food, mode: currentMode }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    document.getElementById("resultBox").innerHTML = buildResult(data, currentMode);
+  } catch(e) {
+    document.getElementById("errorBox").textContent = "⚠ " + e.message;
+    document.getElementById("errorBox").style.display = "block";
+    document.getElementById("emptyBox").style.display = "block";
+  }
+  document.getElementById("loadingBox").style.display = "none";
+  document.getElementById("scanBtn").disabled = false;
+  document.getElementById("scanBtn").textContent = "Scan →";
+}
+
+// ── BUILD RESULT ─────────────────────────────────────────────────
+function buildResult(d, mode) {
+  const M = MODES[mode];
+  const sc = d.health_score || "B";
+  const scColor = SCORE_COLOR[sc] || M.color;
+  const ings = (d.ingredients || []).map(ing => {
+    const st = ["safe","warn","bad"].includes(ing.status) ? ing.status : "safe";
+    return `<div class="chip chip-${st}">
+      <div class="chip-name">${esc(ing.name)}</div>
+      ${ing.what ? `<div class="chip-what">${esc(ing.what)}</div>` : ""}
+    </div>`;
+  }).join("");
+  const alts = (d.alerts||[]).map(a=>`<div style="font-size:0.83rem;color:#C0392B;margin-bottom:0.35rem">• ${esc(a)}</div>`).join("");
+  const bars = [["Protein",d.nutrients?.protein||0],["Fibre",d.nutrients?.fibre||0],["Sugar",d.nutrients?.sugar||0]].map(([l,v])=>`
+    <div class="bar-row"><div class="bar-header"><span>${l}</span><span>${Math.min(100,v)}%</span></div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,v)}%;background:${mode==="kids"?"linear-gradient(90deg,#7C3AED,#A78BFA)":mode==="kidney"?"linear-gradient(90deg,#0891B2,#67E8F9)":"linear-gradient(90deg,#4CAF72,#FFC94D)"}"></div></div></div>`).join("");
+
+  let extra = "";
+
+  if (mode==="kids") {
+    const vClass = {SAFE:"safe",CAUTION:"caution",AVOID:"avoid"}[d.kid_verdict]||"caution";
+    const sugarColor = d.sugar_level==="Low"?"#2A7A45":d.sugar_level==="Medium"?"#9A6200":d.sugar_level==="High"?"#C05700":"#C0392B";
+    const allergens = (d.allergens||[]).length>0
+      ? `<div class="allergen-box allergen-kids" style="margin-top:0.9rem">
+          <div style="font-size:0.62rem;font-family:monospace;letter-spacing:0.1em;text-transform:uppercase;color:#92400E;font-weight:700;margin-bottom:0.5rem">🚨 Allergen Warning</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem">${d.allergens.map(a=>`<span class="allergen-tag">⚠ ${esc(a)}</span>`).join("")}</div>
+        </div>` : "";
+
+    return `<div class="result">
+      <div class="vbanner vbanner-${vClass}">
+        <div class="vbanner-icon">${d.kid_verdict==="SAFE"?"✅":d.kid_verdict==="AVOID"?"🚫":"⚠️"}</div>
+        <div><div class="vbanner-word">${d.kid_verdict||"CAUTION"}</div><div class="vbanner-reason">${esc(d.kid_verdict_reason||"")}</div></div>
+      </div>
+      <div class="food-header food-header-kids">
+        <span class="food-name">📦 ${esc(d.food_name||"Food Item")}</span>
+        ${d.origin?`<span class="origin-badge" style="background:rgba(221,214,254,0.15);color:#DDD6FE">🌍 ${esc(d.origin)}</span>`:""}
+      </div>
+      ${d.fun_fact?`<div class="fun-fact fun-fact-kids"><span style="font-size:1.8rem">🌟</span><div><div class="fun-fact-label">Fun Fact!</div><div class="fun-fact-text">${esc(d.fun_fact)}</div></div></div>`:""}
+      <div class="two-col">
+        <div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">🍬 Sugar Level</span>
+          <div class="sugar-val" style="color:${sugarColor}">${esc(d.sugar_level||"Unknown")}</div>
+          <div class="mini-desc">${d.sugar_level==="Low"?"Great for kids! 🎉":d.sugar_level==="Medium"?"Okay in moderation":d.sugar_level==="High"?"Limit this food ⚠️":"Avoid — too much sugar 🚫"}</div>
+        </div>
+        <div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">🎨 Artificial Colours</span>
+          <div class="colour-val" style="color:${d.artificial_colours?"#C0392B":"#2A7A45"}">${d.artificial_colours?"⚠️ Present":"✓ None"}</div>
+          <div class="mini-desc">${d.artificial_colours?"Linked to hyperactivity in children":"No artificial colours found"}</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">Health Score</span>
+          <div class="score-big" style="color:${scColor}">${sc}</div>
+          <div class="score-reason">${esc(d.score_reason||"")}</div>
+        </div>
+        <div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">Nutrients</span>${bars}</div>
+      </div>
+      ${allergens}
+      <div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">🧪 Ingredients (${(d.ingredients||[]).length} detected)</span>
+        <div class="chips">${ings||"<span style='font-size:0.82rem;color:#6B6355'>No data available</span>"}</div>
+        <div class="legend"><span class="legend-item chip-safe">🟢 Natural</span><span class="legend-item chip-warn">🟡 Processed</span><span class="legend-item chip-bad">🔴 Avoid</span></div>
+      </div>
+      ${alts?`<div class="card card-kids"><span class="card-lbl" style="color:#7C3AED">⚠ Concerns for Kids</span>${alts}</div>`:""}
+      <div class="verdict-bar" style="background:linear-gradient(135deg,#7C3AED,#6D28D9);color:#fff">👨‍👩‍👧 ${esc(d.verdict||"")}</div>
+    </div>`;
+  }
+
+  if (mode==="kidney") {
+    const vClass = {SAFE:"safe",LIMIT:"limit",AVOID:"avoid"}[d.kidney_verdict]||"limit";
+    const rm = d.renal_markers||{};
+    const rlClass = (l) => l==="Low"?"renal-low":l==="Medium"?"renal-medium":l==="High"?"renal-high":"renal-very-high";
+    const rlIcon = (l) => l==="Low"?"🟢":l==="Medium"?"🟡":l==="High"?"🔴":"🔴🔴";
+    return `<div class="result">
+      <div class="vbanner vbanner-${d.kidney_verdict==="SAFE"?"safe":d.kidney_verdict==="AVOID"?"avoid":"limit"}">
+        <div class="vbanner-icon">${d.kidney_verdict==="SAFE"?"✅":d.kidney_verdict==="AVOID"?"🚫":"⚠️"}</div>
+        <div><div class="vbanner-word">${d.kidney_verdict||"LIMIT"}</div><div class="vbanner-reason">${esc(d.kidney_verdict_reason||"")}</div></div>
+      </div>
+      <div class="food-header food-header-kidney">
+        <span class="food-name">📦 ${esc(d.food_name||"Food Item")}</span>
+        ${d.origin?`<span class="origin-badge" style="background:rgba(186,230,253,0.15);color:#BAE6FD">🌍 ${esc(d.origin)}</span>`:""}
+      </div>
+      ${d.dialysis_note?`<div class="info-card dialysis-card"><span style="font-size:1.8rem">💉</span><div><div class="dialysis-label">Dialysis Note</div><div class="dialysis-text">${esc(d.dialysis_note)}</div></div></div>`:""}
+      ${d.safe_portion?`<div class="info-card portion-card"><span style="font-size:1.8rem">🍽️</span><div><div class="portion-label">Safe Portion Size</div><div class="portion-val">${esc(d.safe_portion)}</div></div></div>`:""}
+      <div class="renal-box">
+        <span class="card-lbl" style="color:#0891B2">🔬 Renal Safety Markers</span>
+        ${[["🍌 Potassium",rm.potassium],["🦴 Phosphorus",rm.phosphorus],["🧂 Sodium",rm.sodium],["💧 Fluid",rm.fluid]].map(([l,v])=>
+          `<div class="renal-row ${rlClass(v||'Medium')}"><span class="renal-label">${l}</span><span class="renal-val">${rlIcon(v||'Medium')} ${v||"Unknown"}</span></div>`
+        ).join("")}
+      </div>
+      <div class="two-col">
+        <div class="card card-kidney"><span class="card-lbl" style="color:#0891B2">Kidney Health Score</span>
+          <div class="score-big" style="color:${scColor}">${sc}</div>
+          <div class="score-reason">${esc(d.score_reason||"")}</div>
+        </div>
+        <div class="card card-kidney"><span class="card-lbl" style="color:#0891B2">Nutrients</span>${bars}</div>
+      </div>
+      <div class="card card-kidney"><span class="card-lbl" style="color:#0891B2">🧪 Ingredients (${(d.ingredients||[]).length} detected)</span>
+        <div class="chips">${ings||"<span style='font-size:0.82rem;color:#6B6355'>No data available</span>"}</div>
+        <div class="legend"><span class="legend-item chip-safe">🟢 Natural</span><span class="legend-item chip-warn">🟡 Processed</span><span class="legend-item chip-bad">🔴 Avoid</span></div>
+      </div>
+      ${alts?`<div class="card card-kidney"><span class="card-lbl" style="color:#0891B2">⚠ Kidney Health Alerts</span>${alts}</div>`:""}
+      <div class="verdict-bar" style="background:linear-gradient(135deg,#0891B2,#0369A1);color:#fff">💙 ${esc(d.verdict||"")}</div>
+      <div class="disclaimer">⚕️ <strong>Medical Disclaimer:</strong> This information is for general guidance only. Always consult your nephrologist or renal dietitian before making dietary changes. Individual kidney function varies significantly.</div>
+    </div>`;
+  }
+
+  // General
+  return `<div class="result">
+    <div class="food-header food-header-general">
+      <span class="food-name">📦 ${esc(d.food_name||"Food Item")}</span>
+      ${d.origin?`<span class="origin-badge" style="background:rgba(255,199,77,0.12);color:#FFC94D">🌍 ${esc(d.origin)}</span>`:""}
+    </div>
+    <div class="card card-general"><span class="card-lbl" style="color:#E8A020">🧪 Ingredients (${(d.ingredients||[]).length} detected)</span>
+      <div class="chips">${ings||"<span style='font-size:0.82rem;color:#6B6355'>No data available</span>"}</div>
+      <div class="legend"><span class="legend-item chip-safe">🟢 Natural</span><span class="legend-item chip-warn">🟡 Processed</span><span class="legend-item chip-bad">🔴 Avoid</span></div>
+    </div>
+    <div class="two-col">
+      <div class="card card-general"><span class="card-lbl" style="color:#E8A020">Health Score</span>
+        <div class="score-big" style="color:${scColor}">${sc}</div>
+        <div class="score-reason">${esc(d.score_reason||"")}</div>
+      </div>
+      <div class="card card-general"><span class="card-lbl" style="color:#E8A020">Nutrients</span>${bars}</div>
+    </div>
+    <div class="two-col">
+      <div class="card card-general"><span class="card-lbl" style="color:#E8A020">⚠ Alerts</span>
+        ${alts||`<div style="font-size:0.82rem;color:#4CAF72;font-weight:500">✓ No major concerns</div>`}
+      </div>
+      <div class="card card-general"><span class="card-lbl" style="color:#E8A020">🌿 Ayurvedic</span>
+        <div style="font-size:0.82rem;color:#6B6355;line-height:1.7">${esc(d.ayurveda||"")}</div>
+      </div>
+    </div>
+    <div class="verdict-bar" style="background:#E8A020;color:#1A1A1A">💬 ${esc(d.verdict||"")}</div>
+  </div>`;
+}
+
+function esc(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── BUSINESS DATA ────────────────────────────────────────────────
+function buildBusiness(mode) {
+  const bg2 = {general:"#FFF8EC",kids:"#F3E8FF",kidney:"#E0F2FE"}[mode]||"#FFF8EC";
+
+  // Phases
+  const phases = [
+    {n:"01",t:"Build & Validate",ti:"Month 1–6",c:"#2A7A45",i:["Register Pvt Ltd","MVP — barcode + AI reader","5,000 Indian foods database","500 beta users","Instagram & YouTube content"],g:"Bootstrap ₹15–25L or Angel ₹50L"},
+    {n:"02",t:"Launch & Grow",ti:"Month 7–18",c:"#E8A020",i:["Play Store & App Store","₹99/month premium","Nutritionist influencers","FSSAI campaigns","Hindi & Tamil support"],g:"1 Lakh downloads · ₹1 Crore ARR"},
+    {n:"03",t:"B2B Revenue Scale",ti:"Year 2–3",c:"#D94F3D",i:["Restaurant & kirana API","Swiggy & Zomato","FMCG analytics","Series A ₹20–25Cr","10 cities"],g:"10 Lakh users · ₹10 Crore ARR"},
+    {n:"04",t:"Platform & Marketplace",ti:"Year 3–5",c:"#7B61FF",i:["Clean food marketplace","LabelPe Verified badge","Insurance tie-ups","Series B ₹100–150Cr","SE Asia"],g:"50 Lakh users · ₹75 Crore ARR"},
+    {n:"05",t:"IPO Ready",ti:"Year 6–7",c:"#E91E8C",i:["NSE/BSE listing","3 profitable quarters","SEBI DRHP","Big 4 auditor","Pre-IPO round"],g:"IPO ₹2,000–5,000 Crore valuation"},
+  ];
+  document.getElementById("phases").innerHTML = phases.map(p=>`
+    <div class="phase" style="background:${bg2};border-left:4px solid ${p.c}">
+      <div class="phase-no">PHASE ${p.n}</div>
+      <div class="phase-title">${p.t}</div>
+      <div class="phase-time" style="color:${p.c}">${p.ti}</div>
+      <div class="phase-items">${p.i.map(x=>`<span class="phase-item">→ ${x}</span>`).join("")}</div>
+      <div class="phase-goal" style="background:${p.c}18;color:${p.c}">🎯 ${p.g}</div>
+    </div>`).join("");
+
+  // Fin table
+  const rows=[["Y1","0.5","₹0.3Cr","–₹1.5Cr","🌱 Seed"],["Y2","5","₹3.5Cr","–₹2Cr","🚀 Series A"],["Y3","20","₹18Cr","–₹5Cr","📈 Growth"],["Y4","60","₹65Cr","+₹8Cr","✅ Series B"],["Y5","150","₹200Cr","+₹45Cr","🌏 Pan-India"],["Y6","300","₹420Cr","+₹110Cr","📋 DRHP"],["Y7","500+","₹750Cr+","+₹200Cr+","🔔 Listed!"]];
+  document.getElementById("finTable").innerHTML=`<thead><tr>${["Year","Users(L)","Revenue","EBITDA","Milestone"].map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(([y,u,r,e,m],i)=>`<tr style="background:${i===6?"rgba(42,122,69,0.06)":i%2===0?bg2:"transparent"}"><td style="font-weight:${i===6?700:400}">${y}</td><td style="color:#6B6355">${u}</td><td style="font-weight:600">${r}</td><td class="${e.startsWith("+")?'pos':'neg'}">${e}</td><td style="color:#6B6355">${m}</td></tr>`).join("")}</tbody>`;
+
+  // Revenue
+  const streams=[{tag:"B2C",title:"Premium Subscription",color:"#2A7A45",desc:"₹99/month or ₹799/year. General, Kids and Kidney modes for the whole family."},
+    {tag:"B2B SaaS",title:"Hospital & Kirana API",color:"#E8A020",desc:"₹2,999–₹9,999/month. Hospitals and kirana stores display live kidney-safe food info."},
+    {tag:"B2B Data",title:"FMCG Brand Analytics",color:"#D94F3D",desc:"₹5–25 Lakh/year. Consumer scan data, sentiment analysis and benchmarking."},
+    {tag:"Marketplace",title:"Clean Food Sales",color:"#7B61FF",desc:"5–12% commission on kidney-safe and kid-friendly food brand sales."},
+    {tag:"Insurance",title:"Health Data Partnerships",color:"#0EA5E9",desc:"Anonymised data licensed to Star Health, Niva Bupa and kidney care centres."},
+    {tag:"Certification",title:"LabelPe Verified Badge",color:"#E91E8C",desc:"₹3–10 Lakh/year for FMCG brands after a full ingredient transparency audit."}];
+  document.getElementById("revGrid").innerHTML=streams.map(s=>`<div class="rev-card" style="background:${bg2};border-top:3px solid ${s.color}"><div class="rev-tag" style="background:${s.color}18;color:${s.color}">${s.tag}</div><div class="rev-title">${s.title}</div><div class="rev-desc">${s.desc}</div></div>`).join("");
+
+  // IPO
+  const steps=[{n:"01",t:"Incorporate & Comply (Year 1)",d:"Register Pvt Ltd, GST, FSSAI food-tech licence, DPDP Act 2023.",tag:"Legal Foundation"},
+    {n:"02",t:"Angel → Seed → Series A (Year 1–2)",d:"₹50L Angel, ₹3Cr Seed via SIDBI, ₹20Cr Series A from Stellaris or Blume.",tag:"Early Capital"},
+    {n:"03",t:"Series B + ARR (Year 4)",d:"₹100–150Cr at ₹65Cr ARR. ITC Ventures, HUL Innovation.",tag:"Growth Capital"},
+    {n:"04",t:"Pre-IPO Round (Year 6)",d:"₹300–500Cr at ₹1,500Cr+ valuation. Big 4 auditor. Restructure for listing.",tag:"Pre-IPO"},
+    {n:"05",t:"SEBI DRHP Filing (Year 6–7)",d:"File DRHP. 3 profitable quarters required. Merchant banker: Kotak or Axis.",tag:"SEBI Process"},
+    {n:"06",t:"NSE / BSE Listing (Year 7) 🔔",d:"₹2,000–5,000Cr market cap. India's first food-AI IPO.",tag:"Listed!"}];
+  document.getElementById("ipoSteps").innerHTML=steps.map(s=>`<div class="ipo-card" style="background:${bg2}"><div class="ipo-num">${s.n}</div><div><div class="ipo-title">${s.t}</div><div class="ipo-desc">${s.d}</div><span class="ipo-tag">${s.tag}</span></div></div>`).join("");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "labelpe",
+  "version": "1.0.0",
+  "description": "LabelPe - Read the Label. Eat Right. AI-powered food intelligence for everyone.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "express": "^4.18.2" },
+  "engines": { "node": ">=18" }
+}
