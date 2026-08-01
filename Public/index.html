@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -437,7 +438,7 @@ async function doScan() {
   document.getElementById("scanBtn").textContent = "Scanning...";
 
   try {
-    const res = await fetch("http://labelpe.onrender.com/api/scan", {
+    const res = await fetch("/api/scan", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ food, mode: currentMode }),
